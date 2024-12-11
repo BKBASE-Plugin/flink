@@ -78,14 +78,9 @@ public class GeneralWindowProcessFunction<K, W extends Window>
     @Override
     public void cleanWindowIfNeeded(W window, long time) throws Exception {
         if (isCleanupTime(window, time)) {
-            cleanWindowForce(window);
+            ctx.clearWindowState(window);
+            ctx.clearPreviousState(window);
+            ctx.clearTrigger(window);
         }
-    }
-
-    @Override
-    public void cleanWindowForce(W window) throws Exception {
-        ctx.clearWindowState(window);
-        ctx.clearPreviousState(window);
-        ctx.clearTrigger(window);
     }
 }

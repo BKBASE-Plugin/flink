@@ -18,10 +18,6 @@
 
 package org.apache.flink.table.runtime.operators.window.groupwindow.internal;
 
-
-
-import org.apache.flink.shaded.guava31.com.google.common.collect.Lists;
-
 import org.apache.flink.table.data.RowData;
 import org.apache.flink.table.runtime.generated.NamespaceAggsHandleFunctionBase;
 import org.apache.flink.table.runtime.operators.window.Window;
@@ -61,7 +57,7 @@ public class PanedWindowProcessFunction<K, W extends Window>
                 actualWindows.add(window);
             }
         }
-        return Lists.reverse(actualWindows);
+        return actualWindows;
     }
 
     @Override
@@ -91,21 +87,16 @@ public class PanedWindowProcessFunction<K, W extends Window>
     @Override
     public void cleanWindowIfNeeded(W window, long currentTime) throws Exception {
         if (isCleanupTime(window, currentTime)) {
-            cleanWindowForce(window);
-        }
-    }
-
-    @Override
-    public void cleanWindowForce(W window) throws Exception {
-        Iterable<W> panes = windowAssigner.splitIntoPanes(window);
-        for (W pane : panes) {
-            W lastWindow = windowAssigner.getLastWindow(pane);
-            if (window.equals(lastWindow)) {
-                ctx.clearWindowState(pane);
+            Iterable<W> panes = windowAssigner.splitIntoPanes(window);
+            for (W pane : panes) {
+                W lastWindow = windowAssigner.getLastWindow(pane);
+                if (window.equals(lastWindow)) {
+                    ctx.clearWindowState(pane);
+                }
             }
+            ctx.clearTrigger(window);
+            ctx.clearPreviousState(window);
         }
-        ctx.clearTrigger(window);
-        ctx.clearPreviousState(window);
     }
 
     /** checks whether the pane is late (e.g. can be / has been cleanup) */
