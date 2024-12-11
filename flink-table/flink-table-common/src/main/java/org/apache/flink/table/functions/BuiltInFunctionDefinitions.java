@@ -764,15 +764,6 @@ public final class BuiltInFunctionDefinitions {
                     .outputTypeStrategy(explicit(STRING().nullable()))
                     .build();
 
-    public static final BuiltInFunctionDefinition BKDATA_SUM =
-            BuiltInFunctionDefinition.newBuilder()
-                    .name("bkdata_sum")
-                    .kind(AGGREGATE)
-                    .inputTypeStrategy(sequence(logical(LogicalTypeFamily.NUMERIC)))
-                    .outputTypeStrategy(
-                            TypeStrategies.aggArg0(LogicalTypeMerging::findSumAggType, true))
-                    .build();
-
     public static final BuiltInFunctionDefinition SUM =
             BuiltInFunctionDefinition.newBuilder()
                     .name("sum")

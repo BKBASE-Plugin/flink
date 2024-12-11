@@ -144,7 +144,7 @@ under the License.
 						</goals>
 						<configuration>
 							<compilerArgument>-Xlint:deprecation</compilerArgument>
-							<failOnWarning>false</failOnWarning>
+							<failOnWarning>true</failOnWarning>
 						</configuration>
 					</execution>
 				</executions>
